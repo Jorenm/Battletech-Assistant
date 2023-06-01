@@ -1,0 +1,118 @@
+@import 'styles/_mixins.sass'
+
+.roller
+	display: flex
+	flex-direction: column
+	justify-content: flex-end
+	align-items: center
+	width: 100%
+	height: 100%
+	padding: 5px
+	// h2
+	// 	font-size: 14px
+	// 	line-height: 20px
+	// 	color: white
+	// 	text-align: center
+	// 	width: 100%
+
+.facing_and_hit
+	justify-content: center
+	display: grid
+	grid-template-columns: 1fr 1fr 1fr
+	width: 230px
+	margin-top: 20px
+	button
+		+button()
+		width: calc(100% - 6px)
+		border: 3px solid #444
+		margin: 3px
+		&.active
+			color: white
+			background-color: #008742
+			border-color: #00aa53
+			// 		button
+			// width: calc(33.33% - 6px)
+
+	li:first-child
+		grid-column: 1 / span 3
+		text-align: center
+		display: flex
+		justify-content: center
+
+	li:nth-child(2)
+		button
+			height: 90px
+			width: 60px
+
+	li:nth-child(3)
+		button
+			height: 90px
+			width: 90px
+			font-size: 20px
+
+	li:nth-child(4)
+		display: flex
+		justify-content: right
+		button
+			height: 90px
+			width: 60px
+	
+	li:last-child
+		grid-column: 1 / span 3
+		text-align: center
+		display: flex
+		justify-content: center
+
+
+.roll
+	margin-top: 30px
+	width: 100%
+	> li
+		display: flex
+		flex-wrap: wrap
+	h2
+		position: relative
+		> div
+			position: absolute
+			top: 0
+			right: 0
+
+.cluster_hits
+	color: white
+	font-size: 60px
+	text-align: center
+	width: 100%
+	display: flex
+	flex-wrap: wrap
+	justify-content: space-between
+	> div
+		margin: 1vw
+
+.floating_crits
+	width: 100%
+	display: flex
+	justify-content: center
+	margin: 20px
+
+.hit_spacer
+	width: 44px
+	height: 61px
+
+.weapon_types
+	width: 100%
+	display: flex
+	justify-content: space-between
+	.weapon_type
+		text-align: center
+		width: calc(25% - 2px)
+		display: block
+		> li:first-child
+			color: white
+			padding-bottom: 5px
+		sup
+			font-size: 8px
+			padding-left: 2px
+		button
+			+button()
+			width: 100%
+			white-space: nowrap

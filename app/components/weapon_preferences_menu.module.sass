@@ -1,0 +1,72 @@
+@import 'styles/_mixins.sass'
+
+.hidden_weapons_menu
+	position: absolute
+	top: 0
+	right: 0
+	h2
+		text-align: center
+		color: white
+	button
+		width: 40px
+		height: 40px
+		background-color: #ccc
+		transition: transform .3s ease
+		z-index: 2
+		position: absolute
+		top: 5px
+		right: 5px
+		img
+			width: 100%
+			height: auto
+		&.active
+			transform: rotate3d(0, 1, 0, 180deg)
+
+
+.hidden_weapons_menu_inner
+	position: fixed
+	left: 100%
+	top: 0
+	width: 100%
+	transition: left 0.3s cubic-bezier(0, 0, 0.29, 0.99)
+	background-color: #333
+	padding: 0 10px 20px 10px
+	box-shadow: 0 0 10px 12px rgba(0, 0, 0, 0.5)
+	&::after
+		content: ' '
+		background-image: url('/hazard_stripe.svg')
+		background-size: contain
+		background-position: bottom left
+		height: 7px
+		width: 100%
+		position: absolute
+		bottom: 0
+		left: 0
+	&.show
+		left: 0
+
+.weapon_list
+	display: flex
+	justify-content: space-between
+	ul
+		width: calc(25% - 2px)
+		padding-left: 9px
+	.weapon_type
+		color: white
+		sup
+			font-size: 8px
+			padding-left: 2px
+		label
+			font-size: 12px
+			font-weight: 300
+			width: 100%
+			white-space: nowrap
+			padding: 3px 0
+			display: flex
+			align-items: center
+			display: block
+			text-align: left
+			margin: 2px 0
+			background-color: #333
+			input
+				margin: 3px 3px 0 0
