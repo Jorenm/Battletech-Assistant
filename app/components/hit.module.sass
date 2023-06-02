@@ -15,12 +15,14 @@
 		border: 1px solid white
 		box-shadow: 0 0 0px 2px #000
 
-	&.back
-		width: 50px
-		height: 50px
+	&.vehicle_hit_wrapper
+		height: 17vw
 		.damage
-			top: 100%
-
+			top: 43%
+	&.vtol_hit_wrapper
+		height: 18vw
+		.damage
+			top: 43%
 
 
 .hit
@@ -79,3 +81,64 @@
 			top: 0
 			right: 0
 
+.vehicle_hit
+	width: 300px
+	height: 445px
+	display: block
+	transform: translate(-50%, -50%) scale(.15)
+	transform-origin: center center
+	position: absolute
+	top: 50%
+	left: 50%
+	img
+		height: auto
+		position: absolute
+	.vehicle_left_side
+		top: 0
+		left: 0
+	.vehicle_front
+		top: 0
+		left: 50%
+		transform: translateX(-50%)
+	.vehicle_turret
+		top: 178px
+		left: 50%
+		transform: translateX(-50%)
+	.vehicle_right_side
+		top: 0
+		right: 0
+	.vehicle_rear
+		left: 50%
+		transform: translateX(-50%)
+		bottom: 0
+
+.vtol_hit
+	width: 246px
+	height: 365px
+	display: block
+	transform: translate(-50%, -50%) scale(.2)
+	transform-origin: center center
+	position: absolute
+	top: 50%
+	left: 50%
+	img
+		height: auto
+		position: absolute
+	.vtol_left_side
+		top: 60px
+		left: 60px
+	.vtol_front
+		top: 0
+		left: 50%
+		transform: translateX(-50%)
+	.vtol_rotor
+		top: 149px
+		left: 50%
+		transform: translateX(-50%)
+	.vtol_right_side
+		top: 60px
+		right: 60px
+	.vtol_tail
+		left: 50%
+		transform: translateX(-50%)
+		bottom: 0
