@@ -24,7 +24,7 @@
 		&.active
 			+active()
 
-.facing_and_hit
+.attackDirection_and_hit
 	justify-content: center
 	display: grid
 	grid-template-columns: 1fr 1fr 1fr
@@ -95,6 +95,26 @@
 	display: flex
 	justify-content: center
 	margin: 20px
+
+.vehicle_motive_crits
+	width: 100%
+	margin: 20px
+	position: relative
+	.more
+		position: absolute
+		bottom: -20px
+		right: 0
+		font-size: 16px
+		color: white
+
+	.hits_wrapper
+		overflow-x: auto
+		display: flex
+		justify-content: flex-start
+		> div
+			margin-right: 3px
+			margin-bottom: 3px
+
 
 .hit_spacer
 	width: 44px

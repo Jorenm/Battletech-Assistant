@@ -148,27 +148,27 @@ const locationMap = {
 	}
 }
 
-export default function GetHitLocation(type, facing, roll) {
-	let vehicleFacing = facing
-	if (facing == 'left' || facing == 'right') {
-		vehicleFacing = 'side'
-	}
+export default function GetHitLocation({targetType, attackDirection, roll}) {
+	const location = locationMap[targetType][attackDirection][roll]
+	console.log('GetHitLocation', {location, targetType, attackDirection, roll})
 
-	console.log(locationMap[type][facing])
-
-	const location = locationMap[type][facing][roll]
 
 	let vehicleCrit = null
 	let vehicleMotiveCrit = null
-	if (type == 'vehicle') {
-		vehicleCrit = roll == 2 || roll == 12 || (roll == 8 && vehicleFacing == 'side')
+	if (targetType == 'vehicle') {
+		vehicleCrit = roll == 2 || roll == 12 || (roll == 8 && (attackDirection == 'left' || attackDirection == 'right'))
 		vehicleMotiveCrit = [3,4,5,9].includes(roll)
 		vehicleMotiveCrit = vehicleMotiveCrit ? {
-			facingModifier: {rear: '+1', side: '+2'}
+			attackDirectionModifier: {back: 1, left: 2, right: 2}[attackDirection] || 0,
 		} : null
+	}
+
+	let floatingCrit = false
+	if (targetType == 'mech') {
+		floatingCrit = roll == 2
 	}
 
 	// typeModifiers: {'Tracked, Naval': '+0', 'Hovercraft, Hydrofoil': '+3', 'Wheeled': '+2', 'WiGE': '+4'}
 
-	return {location, roll, floatingCrit: roll == 2 ? true : false, vehicleCrit, vehicleMotiveCrit}
+	return {location, roll, floatingCrit: floatingCrit, vehicleCrit, vehicleMotiveCrit}
 }
