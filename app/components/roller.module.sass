@@ -6,7 +6,7 @@
 	justify-content: flex-end
 	align-items: center
 	width: 100%
-	height: 100%
+	min-height: 100vh
 	padding: 5px
 
 .target_type
@@ -65,9 +65,19 @@
 		justify-content: center
 		height: 50px
 
+.header_bar
+	color: white
+	background-color: #734c25
+	padding: 3px 6px
+	margin: 0 0 3px 0
+
+.single_hit
+	width: 100%
+	display: flex
+	justify-content: center
 
 .roll
-	margin-top: 30px
+	margin-top: 10px
 	width: 100%
 	> li
 		display: flex
@@ -79,26 +89,19 @@
 			top: 0
 			right: 0
 
-.cluster_hits
+.cluster_hits, .hits
 	color: white
-	font-size: 60px
-	text-align: center
 	width: 100%
-	display: flex
-	flex-wrap: wrap
-	justify-content: space-between
-	> div
-		margin: 1vw
+	.hits_wrapper
+		display: flex
+		flex-wrap: wrap
+		justify-content: flex-start
+		> div
+			margin: 5px
 
-.floating_crits
+.scrolling_list
 	width: 100%
-	display: flex
-	justify-content: center
-	margin: 20px
-
-.vehicle_motive_crits
-	width: 100%
-	margin: 20px
+	margin: 10px
 	position: relative
 	.more
 		position: absolute
@@ -106,15 +109,15 @@
 		right: 0
 		font-size: 16px
 		color: white
-
-	.hits_wrapper
+	.crits_wrapper
 		overflow-x: auto
 		display: flex
 		justify-content: flex-start
 		> div
-			margin-right: 3px
-			margin-bottom: 3px
+			margin: 1vw
 
+// .floating_crits
+// .vehicle_motive_crits
 
 .hit_spacer
 	width: 44px
@@ -137,3 +140,4 @@
 		button
 			width: 100%
 			white-space: nowrap
+			margin: 3px 0

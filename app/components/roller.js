@@ -17,7 +17,7 @@ import WeaponPreferencesMenu from './weapon_preferences_menu'
 export default function Roller() {
 
 	const [clusterHits, setClusterHits] = useState(null)
-	const [hits, setHits] = useState([])
+	const [singleHit, setSingleHit] = useState(null)
 	const [attackDirection, setattackDirection] = useState('')
 	const [weaponPreferences, setWeaponPreferences] = useState({})
 	const [targetType, setTargetType] = useState('')
@@ -29,12 +29,10 @@ export default function Roller() {
 
 	useEffect(() => {
 		if (!initialRenderRef.current) {
-			Cookies.set('targetType', targetType)
-			Cookies.set('attackDirection', attackDirection)
-			setVehicleCrits([])
-			setVehicleMotiveCrits([])
-			setHits([])
-			setClusterHits(null)
+			const date = new Date()
+			Cookies.set('targetType', targetType, {expires: date.setFullYear(date.getFullYear() + 1)})
+			Cookies.set('attackDirection', attackDirection, {expires: date.setFullYear(date.getFullYear() + 1)})
+			resetResults()
 		} else {
 			initialRenderRef.current = false
 		}
@@ -45,33 +43,51 @@ export default function Roller() {
 		setattackDirection(Cookies.get('attackDirection') || 'front')
 	}, [])
 
+	function resetResults() {
+		setFloatingCrits([])
+		setVehicleCrits([])
+		setVehicleMotiveCrits([])
+		setSingleHit(null)
+		setClusterHits(null)
+	}
+
 	function rollHit() {
-		const result = RollDice()
-		console.log(result)
+		resetResults()
+
+		const roll = RollDice()
+		// const roll = 10
+		console.log('roll', roll)
+		const hit = GetHitLocation({targetType, attackDirection, roll})
+
+		setSingleHit(hit)
+
+		if (hit.floatingCrit) {
+			setFloatingCrits([hit])
+		} else if (hit.vehicleMotiveCrit) {
+			setVehicleMotiveCrits([hit])
+		} else if (hit.vehicleCrit) {
+			setVehicleCrits([hit])
+		}
 	}
 
 	function rollCluster(count, clusterSize, damage) {
-
-		// setFloatingCrits([])
-		// setClusterHits([])
+		resetResults()
 
 		const clusterHits = clusterTable[count][RollDice()-2]
-		const displayedHits = Math.ceil(clusterHits/clusterSize)
+		const displayedClusterHits = Math.ceil(clusterHits/clusterSize)
 		let remainder = clusterHits%clusterSize
 
 		if (damage && remainder) {
 			remainder = damage * remainder
 		}
 
-		// TODO: Seed floating crit so it doesn't change on attackDirection change. Maybe make attackDirection change do an entire reroll?
-
 		const generatedHits = []
 		const newFloatingCrits = []
 		const newVehicleCrits = []
 		const newVehicleMotiveCrits = []
-		for (let i = 0; i < displayedHits; i++) {
+		for (let i = 0; i < displayedClusterHits; i++) {
 			const hit = GetHitLocation({targetType, attackDirection, roll: RollDice()})
-			if (i == displayedHits-1) {
+			if (i == displayedClusterHits-1) {
 				hit.remainder = remainder
 			}
 			if (hit.floatingCrit) {
@@ -84,35 +100,42 @@ export default function Roller() {
 			generatedHits.push(hit)
 		}
 
-		console.log()
-
 		setClusterHits({hits: generatedHits, remainder})
 		setFloatingCrits(newFloatingCrits)
 		setVehicleCrits(newVehicleCrits)
 		setVehicleMotiveCrits(newVehicleMotiveCrits)
-		console.log({newVehicleCrits, newVehicleMotiveCrits})
 	}
 
 	return <div className={styles.roller}>
-		{clusterHits && <div className={styles.cluster_hits}>
-			{clusterHits.hits.map((hit, i) => {
-				return <Hit key={`cluster_hit_${i}`} hitLocation={hit} targetType={targetType} roll={hit.roll} attackDirection={attackDirection} damage={hit.remainder || 0} />
-			})}
-			{[...new Array(7-clusterHits.hits.length%7).keys()].map((i) => {
-				return <div key={`spacer_${i}`} className={styles.hit_spacer}></div>
-			})}
+		{singleHit && <div className={styles.single_hit}>
+			<Hit hitLocation={singleHit} single={true} targetType={targetType} roll={singleHit.roll} attackDirection={attackDirection} damage={0} />
 		</div>}
 
-		{floatingCrits.length ? <div className={styles.floating_crits}>
-			{floatingCrits.map((hit, i) => {
-				return <Crit key={`floating_crit_${i}`} targetType={targetType} hit={hit} attackDirection={attackDirection} />
-			})}
+		{clusterHits && <div className={styles.cluster_hits}>
+			<h2 className={styles.header_bar}>Cluster Hits</h2>
+			<div className={styles.hits_wrapper}>
+				{clusterHits.hits.map((hit, i) => {
+					return <Hit key={`cluster_hit_${i}`} hitLocation={hit} targetType={targetType} roll={hit.roll} attackDirection={attackDirection} damage={hit.remainder || 0} />
+				})}
+			</div>
+		</div>}
+
+		{floatingCrits.length ? <div className={classNames(styles.scrolling_list, styles.floating_crits)}>
+			<h2 className={styles.header_bar}>Floating crits</h2>
+			{floatingCrits.length > 7 ? <div className={styles.more}><strong>more &raquo;</strong></div> : ''}
+			<div className={styles.crits_wrapper}>
+				{floatingCrits.map((hit, i) => {
+					return [...new Array(hit.floatingCrit).keys()].map((i) => {
+						return <Crit key={`floating_crit_${i}`} targetType={targetType} hit={hit} attackDirection={attackDirection} />
+					})
+				})}
+			</div>
 		</div> : ''}
 
-		{vehicleMotiveCrits.length ? <div className={styles.vehicle_motive_crits}>
-			<h2>Motive damage</h2>
+		{vehicleMotiveCrits.length ? <div className={classNames(styles.scrolling_list, styles.vehicle_motive_crits)}>
+			<h2 className={styles.header_bar}>Motive damage</h2>
 			{vehicleMotiveCrits.length > 2 ? <div className={styles.more}><strong>more &raquo;</strong></div> : ''}
-			<div className={styles.hits_wrapper}>
+			<div className={styles.crits_wrapper}>
 				{vehicleMotiveCrits.map((hit, i) => {
 					return <Crit key={`motive_crit_${i}`} targetType={targetType} hit={hit} attackDirection={attackDirection} />
 				})}

@@ -3,14 +3,12 @@ import styles from './hit.module.sass'
 
 import { useEffect } from 'react'
 
-export default function Hit({attackDirection, targetType, roll, hitLocation, damage}) {
+export default function Hit({attackDirection, targetType, roll, hitLocation, single, damage}) {
 	useEffect(() => {
 	}, [])
 
-	console.log('hit', {attackDirection, targetType, roll, hitLocation, damage})
-
 	// This is also used in the crit component. If it's displayed from a crit it has no value except hitLocation
-	return <div roll={roll || hitLocation.roll} floatingcrit={!roll ? 'true' : 'false'} className={classNames(styles.hit_wrapper, targetType == 'vehicle' ? styles.vehicle_hit_wrapper : '', targetType == 'vtol' ? styles.vtol_hit_wrapper : '')}>
+	return <div roll={roll || hitLocation.roll} floatingcrit={!roll ? 'true' : 'false'} className={classNames(styles.hit_wrapper, single ? styles.single: '', targetType == 'vehicle' ? styles.vehicle_hit_wrapper : '', targetType == 'vtol' ? styles.vtol_hit_wrapper : '')}>
 		{hitLocation && targetType == 'mech' && <div className={styles.hit}>
 			<img src={`/hit_locations/left_arm${hitLocation.location == 'LA' ? '_red' : ''}.png`} width="49" height="137" className={styles.left_arm} />
 			<img src={`/hit_locations/left_torso${hitLocation.location == 'LT' ? '_red' : ''}.png`} width="44" height="70" className={styles.left_torso} />
@@ -25,7 +23,7 @@ export default function Hit({attackDirection, targetType, roll, hitLocation, dam
 		{hitLocation && targetType == 'vehicle' && <div className={styles.vehicle_hit}>
 			<img src={`/hit_locations/vehicle_left${hitLocation.location == 'Left Side' ? '_red' : ''}.png`} width="91" height="406" className={styles.vehicle_left_side} />
 			<img src={`/hit_locations/vehicle_front${hitLocation.location == 'Front' ? '_red' : ''}.png`} width="212" height="136" className={styles.vehicle_front} />
-			<img src={`/hit_locations/vehicle_turret${hitLocation.location == 'Rotor' ? '_red' : ''}.png`} width="135" height="142" className={styles.vehicle_turret} />
+			<img src={`/hit_locations/vehicle_turret${hitLocation.location == 'Turret' ? '_red' : ''}.png`} width="135" height="142" className={styles.vehicle_turret} />
 			<img src={`/hit_locations/vehicle_right${hitLocation.location == 'Right Side' ? '_red' : ''}.png`} width="92" height="405" className={styles.vehicle_right_side} />
 			<img src={`/hit_locations/vehicle_rear${hitLocation.location == 'Rear' ? '_red' : ''}.png`} width="249" height="73" className={styles.vehicle_rear} />
 		</div>}

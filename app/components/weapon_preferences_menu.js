@@ -15,8 +15,8 @@ export default function WeaponPreferencesMenu({setWeaponPreferences, weaponPrefe
 		const newWeaponPreferences = {...weaponPreferences}
 		newWeaponPreferences[name] = !newWeaponPreferences[name]
 		setWeaponPreferences(newWeaponPreferences)
-	
-		Cookies.set('weaponPreferences', JSON.stringify(newWeaponPreferences))
+		const date = new Date()
+		Cookies.set('weaponPreferences', JSON.stringify(newWeaponPreferences), {expires: date.setFullYear(date.getFullYear() + 1)})
 	}
 
 	useEffect(() => {

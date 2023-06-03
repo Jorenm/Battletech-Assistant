@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import GetCritLocations from '../lib/getCritLocations'
+import GetCritLocation from '../lib/getCritLocation'
 import GetHitLocation from '../lib/getHitLocation'
 import RollDice from '../lib/rolldice'
 
@@ -10,29 +10,21 @@ import styles from './crit.module.sass'
 
 export default function Crit({targetType, attackDirection, roll, hit}) {
 
-	console.log('crit', hit)
-
 	function isGroupless(hitLocation) {
 		return ['HD', 'LL', 'RL'].includes(hitLocation)
 	}
 
-	let critLocations = []
 	if (targetType == 'mech' && hit.floatingCrit) {
-		const actualCrits = {8: 1, 9: 1, 10: 2, 11: 2, 12: 3}[RollDice()] || false
-		critLocations = GetCritLocations({targetType, critCount: actualCrits})
+		const critLocation = GetCritLocation({targetType})
+		const hitLocation = GetHitLocation({targetType, attackDirection, roll: RollDice()})
 
-		return critLocations.length ? <div roll={roll} className={styles.crits}>
-			{critLocations.map((critLocation, i) => {
-				const hitLocation = GetHitLocation({targetType, attackDirection, roll: RollDice()})
-				return <div className={classNames(styles.crit, styles[`type_${targetType}`])} key={`crit_${i}`}>
-					<Hit key={`crit_location_${i}`} hitLocation={hitLocation} targetType={targetType} damage={0} />
-					<div className={styles.crit_location}>
-						{isGroupless(hitLocation.location) ? '' : (critLocation.group > 3 ? '↑' : '↓')}
-						{critLocation.location}
-					</div>
-				</div>
-			})}
-		</div> : null
+		return <div roll={roll} className={classNames(styles.crit, styles[`type_${targetType}`])}>
+			<Hit hitLocation={hitLocation} targetType={targetType} damage={0} />
+			<div className={styles.crit_location}>
+				{isGroupless(hitLocation.location) ? '' : (critLocation.group > 3 ? '↑' : '↓')}
+				{critLocation.location}
+			</div>
+		</div>
 	} else if (targetType == 'vehicle') {
 		if (hit.vehicleMotiveCrit) {
 			const damageResults = {
@@ -56,7 +48,6 @@ export default function Crit({targetType, attackDirection, roll, hit}) {
 				}
 			}
 
-			console.log('damageResults', damageResults)
 			return <div className={classNames(styles.motive_crit, styles[`type_${targetType}`])}>
 				{[...Object.keys(damageResults)].map((type, i) => {
 					return <p key={`damage_results_${i}`}>
@@ -66,10 +57,4 @@ export default function Crit({targetType, attackDirection, roll, hit}) {
 			</div>
 		}
 	}
-
-	console.log('crit', critLocations)
-
-
-
-
 }

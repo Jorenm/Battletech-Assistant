@@ -38,6 +38,18 @@ const locationMap = {
 			10: 'LA',
 			11: 'LA',
 			12: 'HD'
+		}, back: {
+			2: 'CT',
+			3: 'RA',
+			4: 'RA',
+			5: 'RL',
+			6: 'RT',
+			7: 'CT',
+			8: 'LT',
+			9: 'LL',
+			10: 'LA',
+			11: 'LA',
+			12: 'HD'
 		}
 	}, vehicle: {
 		front: {
@@ -150,8 +162,6 @@ const locationMap = {
 
 export default function GetHitLocation({targetType, attackDirection, roll}) {
 	const location = locationMap[targetType][attackDirection][roll]
-	console.log('GetHitLocation', {location, targetType, attackDirection, roll})
-
 
 	let vehicleCrit = null
 	let vehicleMotiveCrit = null
@@ -165,10 +175,11 @@ export default function GetHitLocation({targetType, attackDirection, roll}) {
 
 	let floatingCrit = false
 	if (targetType == 'mech') {
-		floatingCrit = roll == 2
+		if (roll == 2) {
+			const actualCrits = {8: 1, 9: 1, 10: 2, 11: 2, 12: 3}[RollDice()] || false
+			floatingCrit = actualCrits
+		}
 	}
-
-	// typeModifiers: {'Tracked, Naval': '+0', 'Hovercraft, Hydrofoil': '+3', 'Wheeled': '+2', 'WiGE': '+4'}
 
 	return {location, roll, floatingCrit: floatingCrit, vehicleCrit, vehicleMotiveCrit}
 }

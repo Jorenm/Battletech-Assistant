@@ -1,7 +1,23 @@
 .hit_wrapper
-	width: 11vw
-	height: 15vw
+	width: 47px
 	position: relative
+	&::after
+		content: ' '
+		padding-top: 130%
+		display: block
+
+	&.single
+		width: 70%
+		&.vehicle_hit_wrapper
+			width: 30%
+			&::after
+				padding-top: 140%
+		&::after
+			padding-top: 70%
+		.hit
+			transform: translate(-50%, -50%) scale(.5)
+		.vehicle_hit
+			transform: translate(-50%, -50%) scale(.3)
 
 	.damage
 		position: absolute
@@ -16,11 +32,9 @@
 		box-shadow: 0 0 0px 2px #000
 
 	&.vehicle_hit_wrapper
-		height: 17vw
 		.damage
 			top: 43%
 	&.vtol_hit_wrapper
-		height: 18vw
 		.damage
 			top: 43%
 
